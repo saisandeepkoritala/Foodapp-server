@@ -71,8 +71,8 @@ exports.checkOut = async(req,res,next)=>{
             payment_method_types:["card"],
             line_items:lineItems,
             mode:"payment",
-            success_url:"http://localhost:3000/success",
-            cancel_url:"http://localhost:3000/cancel"
+            success_url:"https://saisandeepkoritala-foodapp.netlify.app/success",
+            cancel_url:"https://saisandeepkoritala-foodapp.netlify.app/cancel"
         })
         console.log(session)
         res.json({
