@@ -7,10 +7,7 @@ dotenv.config({path:`${__dirname}/config.env`})
 const DB=process.env.DATABASE.replace("<PASSWORD>",process.env.PASSWORD);
 const port = process.env.PORT;
 
-mongoose.connect(DB,{
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
+mongoose.connect(DB)
     .then(()=>{
         console.log("connection is successful")
     })

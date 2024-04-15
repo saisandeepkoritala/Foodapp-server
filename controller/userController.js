@@ -1,4 +1,5 @@
 const User= require("../models/userModel");
+const stripe = require("stripe")(process.env.STRIPE_SECRET)
 
 exports.loginUser = async (req, res, next) => {
     try {
@@ -45,3 +46,40 @@ exports.signUp = async (req, res, next) => {
         console.error(error);
     }
 };
+
+
+exports.checkOut = async(req,res,next)=>{
+    try{
+        const {products} = req.body;
+        // console.log(products)
+        const lineItems=products.map((product)=>{
+            return ({
+                price_data:{
+                    currency:"usd",
+                    product_data:{
+                        name:product.alt_description,
+                        image:product.urls.full
+                    },
+                    unit_amount:Math.floor(product.likes * 100),
+                },
+                quantity:1
+            })
+        })
+
+        console.log(lineItems)
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types:["card"],
+            line_items:lineItems,
+            mode:"payment",
+            success_url:"http://localhost:3000/success",
+            cancel_url:"http://localhost:3000/cancel"
+        })
+        console.log(session)
+        res.json({
+            id:session.id
+        })
+    }
+    catch(e){
+
+    }
+}
