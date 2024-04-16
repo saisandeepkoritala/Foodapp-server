@@ -1,5 +1,5 @@
 const User= require("../models/userModel");
-const stripe = require("stripe")(process.env.STRIPE_SECRET)
+const stripe = require("stripe")("sk_test_51P5x7GRth6EVcji8my5sr84ZQ2cwP8DI1QD1pacPMp0fkrGVIkJS5KMtiekk1EuxO5BNzVkNDXQcYsLcECSMvChy00z2rcczfR")
 
 exports.loginUser = async (req, res, next) => {
     try {
@@ -48,38 +48,30 @@ exports.signUp = async (req, res, next) => {
 };
 
 
-exports.checkOut = async(req,res,next)=>{
-    try{
-        const {products} = req.body;
-        // console.log(products)
-        const lineItems=products.map((product)=>{
-            return ({
-                price_data:{
-                    currency:"usd",
-                    product_data:{
-                        name:product.alt_description,
-                        image:product.urls.full
-                    },
-                    unit_amount:Math.floor(product.likes * 100),
-                },
-                quantity:1
-            })
-        })
 
-        console.log(lineItems)
+exports.checkOut =  async (req, res) =>{
+    
+    try {
         const session = await stripe.checkout.sessions.create({
-            payment_method_types:["card"],
-            line_items:lineItems,
-            mode:"payment",
-            success_url:"https://saisandeepkoritala-foodapp.netlify.app/success",
-            cancel_url:"https://saisandeepkoritala-foodapp.netlify.app/cancel"
-        })
-        console.log(session)
-        res.json({
-            id:session.id
-        })
-    }
-    catch(e){
-
-    }
+            payment_method_types: ["card"],
+            mode: "payment",
+            line_items: req.body.products.map(item => {
+                return {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                    name: item.alt_description,
+                    },
+                    unit_amount: Math.floor(item.likes*100),
+                },
+                quantity: item.quantity,
+                }
+            }),
+            success_url: `http://localhost:3000/success`,
+            cancel_url: `http://localhost:3000/cancel`,
+            })
+            res.json({ url: session.url })
+        } catch (e) {
+            res.status(500).json({ error: e.message })
+        }
 }
