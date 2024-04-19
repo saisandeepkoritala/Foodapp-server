@@ -48,30 +48,29 @@ exports.signUp = async (req, res, next) => {
 };
 
 
-
-exports.checkOut =  async (req, res) =>{
-    
+exports.checkOut = async (req, res) => {
     try {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
             line_items: req.body.products.map(item => {
                 return {
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                    name: item.alt_description,
+                    price_data: {
+                        currency: "usd",
+                        product_data: {
+                            name: item.alt_description,
+                        },
+                        unit_amount: Math.floor(item.likes * 100),
                     },
-                    unit_amount: Math.floor(item.likes*100),
-                },
-                quantity: item.quantity,
+                    quantity: item.quantity,
                 }
             }),
-            success_url: `https://saisandeepkoritala-foodapp.netlify.app/success`,
-            cancel_url: `https://saisandeepkoritala-foodapp.netlify.app/cancel`,
-            })
-            res.json({ url: session.url })
-        } catch (e) {
-            res.status(500).json({ error: e.message })
-        }
+            success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `http://localhost:3000/cancel`,
+        });
+        res.json({ url: session.url });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 }
+
