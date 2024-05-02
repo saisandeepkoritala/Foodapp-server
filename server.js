@@ -8,8 +8,8 @@ const DB=process.env.DATABASE.replace("<PASSWORD>",process.env.PASSWORD);
 const port = process.env.PORT;
 
 mongoose.connect(DB)
-    .then(()=>{
-        console.log("connection is successful")
+    .then((info)=>{
+        console.log("connection is successful",info)
     })
     .catch((err)=>{
         console.log("error",err)

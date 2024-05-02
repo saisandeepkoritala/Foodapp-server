@@ -1,6 +1,22 @@
 const User= require("../models/userModel");
 const stripe = require("stripe")("sk_test_51P5x7GRth6EVcji8my5sr84ZQ2cwP8DI1QD1pacPMp0fkrGVIkJS5KMtiekk1EuxO5BNzVkNDXQcYsLcECSMvChy00z2rcczfR")
 
+
+exports.isAlive = async(req,res,next)=>{
+    try{
+        res.json({
+            status:"Success",
+            message:"Server is Up"
+        })
+    }
+    catch(e){
+        res.json({
+            status:"Fail",
+            message:"Server is down"
+        })
+    }
+}
+
 exports.loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -65,8 +81,8 @@ exports.checkOut = async (req, res) => {
                     quantity: item.quantity,
                 }
             }),
-            success_url: `https://saisandeepkoritala-foodapp.netlify.app/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `https://saisandeepkoritala-foodapp.netlify.app/cancel`,
+            success_url: `http://localhost:3000/success`,
+            cancel_url: `http://localhost:3000/cancel`,
         });
         res.json({ url: session.url });
     } catch (e) {
