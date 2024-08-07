@@ -9,7 +9,7 @@ const port = process.env.PORT;
 
 mongoose.connect(DB)
     .then((info)=>{
-        console.log("connection is successful",info)
+        console.log("connection is successful")
     })
     .catch((err)=>{
         console.log("error",err)

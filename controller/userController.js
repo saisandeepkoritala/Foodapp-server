@@ -81,8 +81,8 @@ exports.checkOut = async (req, res) => {
                     quantity: item.quantity,
                 }
             }),
-            success_url: `http://localhost:3000/success`,
-            cancel_url: `http://localhost:3000/cancel`,
+            success_url: `https://saisandeepkoritala-foodapp.netlify.app/success`,
+            cancel_url: `https://saisandeepkoritala-foodapp.netlify.app/cancel`,
         });
         res.json({ url: session.url });
     } catch (e) {
